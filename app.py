@@ -44,11 +44,7 @@ app = Flask(__name__)
 from linebot import WebhookHandler
 import os
 
-#add
-channel_secret = os.getenv('CHANNEL_SECRET')
-if not channel_secret:
-    raise ValueError("Environment variable 'CHANNEL_SECRET' is missing or empty!")
-line_handler = WebhookHandler(channel_secret)
+
 
 
 configuration = Configuration(access_token = os.getenv('CHANNEL_ACCESS_TOKEN'))
