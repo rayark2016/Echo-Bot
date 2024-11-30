@@ -23,13 +23,16 @@ import os
 app = Flask(__name__)
 
 # 環境變數設置
-configuration = Configuration(access_token=os.getenv('CHANNEL_ACCESS_TOKEN', ''))
-if not configuration.access_token:
+CHANNEL_SECRET = os.getenv('CHANNEL_SECRET')
+if not CHANNEL_SECRET:
+    raise ValueError("Missing environment variable: CHANNEL_SECRET")
+
+CHANNEL_ACCESS_TOKEN = os.getenv('CHANNEL_ACCESS_TOKEN')
+if not CHANNEL_ACCESS_TOKEN:
     raise ValueError("Missing environment variable: CHANNEL_ACCESS_TOKEN")
 
-line_handler = WebhookHandler(os.getenv('CHANNEL_SECRET', ''))
-if not line_handler.channel_secret:
-    raise ValueError("Missing environment variable: CHANNEL_SECRET")
+configuration = Configuration(access_token=CHANNEL_ACCESS_TOKEN)
+line_handler = WebhookHandler(CHANNEL_SECRET)
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -59,7 +62,7 @@ def handle_message(event):
             line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=[TextMessage(text="這是文字訊息喔")]
+                    messages=[TextMessage(text="這是文字訊息")]
                 )
             )
         elif text == '圖片':
